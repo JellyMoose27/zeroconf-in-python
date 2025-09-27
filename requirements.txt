@@ -1,0 +1,3 @@
+unidecode
+zeroconf>=0.132.2
+requests>=2.31.0

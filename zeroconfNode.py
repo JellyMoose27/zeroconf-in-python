@@ -18,7 +18,7 @@ class ZeroconfNode:
         self.advertiser.unregister()
         self.zeroconf.close()
 
-if __name__ == "main":
+if __name__ == "__main__":
     node = ZeroconfNode("nsp_controller", 8069)
 
     try:

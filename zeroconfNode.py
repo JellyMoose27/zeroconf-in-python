@@ -3,6 +3,7 @@ import time
 
 from advertiser import DeviceAdvertiser
 from browser import Listener, Zeroconf, ServiceBrowser
+from handshake import Handshake
 
 class ZeroconfNode:
     def __init__(self, service_name="Odoo_Local", port=8069):
@@ -39,6 +40,4 @@ if __name__ == "__main__":
             break
         else:
             print("[X] Invalid choice")
-
-
     

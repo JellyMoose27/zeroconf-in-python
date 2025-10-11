@@ -3,7 +3,8 @@ import time
 
 from advertiser import DeviceAdvertiser
 from browser import Listener, Zeroconf, ServiceBrowser
-from handshake import Handshake
+from server import Handshake
+from client import HandshakeClient
 
 class ZeroconfNode:
     def __init__(self, service_name="Odoo_Local", port=8069):
@@ -27,7 +28,7 @@ if __name__ == "__main__":
 
         choice = input("Your choice: ")
         if choice == "1":
-            node = ZeroconfNode("nsp_controller", 8069)
+            node = ZeroconfNode("_non_stop_parking", 8069)
             try:
                 print("ZeroconfNode running. Press Ctrl+C to stop.")
                 while True:

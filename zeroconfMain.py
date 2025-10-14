@@ -1,18 +1,15 @@
-import threading
 import time
 
 from advertiser import DeviceAdvertiser
 from browser import Listener, Zeroconf, ServiceBrowser
-from server import Handshake
-from client import HandshakeClient
 
 class ZeroconfNode:
-    def __init__(self, service_name="Odoo_Local", port=8069):
+    def __init__(self, service_name="odoo_local", port=8069):
         self.advertiser = DeviceAdvertiser(service_name, port)
-        self.advertiser.register()
+        self.advertiser.register() #Advertise onto the network
 
         self.zeroconf = Zeroconf()
-        self.listener = Listener()
+        self.listener = Listener() #start browsing for services
         self.browser = ServiceBrowser(self.zeroconf, "_odoo._tcp.local.", self.listener)
 
     def close(self):

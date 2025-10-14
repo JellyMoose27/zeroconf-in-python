@@ -34,7 +34,7 @@ class ClientSide:
             if response.status_code == 201:
                 res_json = response.json()
                 self.access_token = res_json.get("access_token")
-                print("access token: ", self.access_token)
+                # print("access token: ", self.access_token)
                 print("Handshake successfully established")
                 return {
                     "code": 200,

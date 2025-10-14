@@ -8,7 +8,7 @@ class DeviceAdvertiser:
         ip = socket.gethostbyname(hostname)
 
         self.info = ServiceInfo(
-            type_="_non_stop_parking._tcp.local.",
+            type_="_nsp._tcp.local.",
             name=f"{service_name}._nsp._tcp.local.",
             addresses=[socket.inet_aton(ip)],
             port=port,

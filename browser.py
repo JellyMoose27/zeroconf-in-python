@@ -1,21 +1,30 @@
 from zeroconf import *
 import socket
-from client import HandshakeClient
+import threading
+
+from client import client
 
 class Listener(ServiceListener):
     """Browser"""
     def add_service(self, zc, type_, name):
         info = zc.get_service_info(type_, name)
         if info:
+            host = socket.inet_ntoa(info.addresses[0])
+            port = info.port
             addresses = [addr for addr in info.parsed_addresses()]
             print(f"[+] Service discovered: {name}")
             print(f"    Address: {addresses}")
             print(f"    Port: {info.port}")
             print(f"    Properties: {info.properties}")
-            client = HandshakeClient()
-            client.perform(info.parsed_addresses()[0], info.port)
+            threading.Thread(
+                target=self.connect_to_server, args=(host, port), daemon=True
+            ).start()
         else:
             print(f"[+] Service discovered: {name} (no info yet)")
+
+    def connect_to_server(self, host, port):
+        response = client.connect_to_server(host, port)
+        print(f"[HANDSHAKE RESPONSE] {response}")
 
     def update_service(self, zc, type_, name):
         info = zc.get_service_info(type_, name)

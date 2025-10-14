@@ -4,13 +4,13 @@ from advertiser import DeviceAdvertiser
 from browser import Listener, Zeroconf, ServiceBrowser
 
 class ZeroconfNode:
-    def __init__(self, service_name="odoo_local", port=8069):
+    def __init__(self, service_name, port=8069):
         self.advertiser = DeviceAdvertiser(service_name, port)
         self.advertiser.register() #Advertise onto the network
 
         self.zeroconf = Zeroconf()
         self.listener = Listener() #start browsing for services
-        self.browser = ServiceBrowser(self.zeroconf, "_odoo._tcp.local.", self.listener)
+        self.browser = ServiceBrowser(self.zeroconf, "_nsp._tcp.local.", self.listener)
 
     def close(self):
         print("[x] Shutting down Zeroconf...")
@@ -25,7 +25,7 @@ if __name__ == "__main__":
 
         choice = input("Your choice: ")
         if choice == "1":
-            node = ZeroconfNode("_non_stop_parking", 8069)
+            node = ZeroconfNode("_nsp_master", 8069)
             try:
                 print("ZeroconfNode running. Press Ctrl+C to stop.")
                 while True:

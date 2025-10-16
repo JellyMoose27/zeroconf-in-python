@@ -1,9 +1,12 @@
-import socket
-import threading
+import time
 import requests
+import threading
 from flask import Flask, request, jsonify
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
+from advertiser import DeviceAdvertiser
+from browser import Listener, Zeroconf, ServiceBrowser
+from zeroconfMain import ZeroconfNode
 
 app = Flask(__name__)
 
@@ -62,6 +65,17 @@ def api_connect_to_server():
     response = client.connect_to_server(server_host, server_port)
     return jsonify(response), response["code"]
 
+def run_client(host, port):
+    thread = threading.Thread(target=lambda: app.run(host=host,port=8069,debug=False))
+    thread.daemon = True
+    thread.start()
+
 if __name__ == "__main__":
-    """"""
-    app.run(host="0.0.0.0", port=5002, debug=True)
+    """start zeroconf and the client"""
+    zeroconf_node = ZeroconfNode("_sample", 8069)
+    run_client(zeroconf_node.ip, port=8069)
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        zeroconf_node.close()

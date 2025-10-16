@@ -1,11 +1,10 @@
-import time
-
 from advertiser import DeviceAdvertiser
 from browser import Listener, Zeroconf, ServiceBrowser
 
 class ZeroconfNode:
     def __init__(self, service_name, port=8069):
         self.advertiser = DeviceAdvertiser(service_name, port)
+        self.ip = self.advertiser.get_ip()
         self.advertiser.register() #Advertise onto the network
 
         self.zeroconf = Zeroconf()
@@ -16,26 +15,4 @@ class ZeroconfNode:
         print("[x] Shutting down Zeroconf...")
         self.advertiser.unregister()
         self.zeroconf.close()
-
-if __name__ == "__main__":
-    while True:
-        print("\n--- Zeroconf Menu ---")
-        print("1. Start Service")
-        print("2. Exit")
-
-        choice = input("Your choice: ")
-        if choice == "1":
-            node = ZeroconfNode("_nsp_master", 8069)
-            try:
-                print("ZeroconfNode running. Press Ctrl+C to stop.")
-                while True:
-                    time.sleep(1)
-            except KeyboardInterrupt:
-                node.close()
-                print("\n[X] Zeroconf stopped returning to menu...")
-        elif choice == "2":
-            print("[X] Exiting...")
-            break
-        else:
-            print("[X] Invalid choice")
     

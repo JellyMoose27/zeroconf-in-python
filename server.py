@@ -1,4 +1,9 @@
 from flask import Flask, request, jsonify
+import threading
+import time
+from advertiser import DeviceAdvertiser
+from browser import Listener, Zeroconf, ServiceBrowser
+from zeroconfMain import ZeroconfNode
 
 app = Flask(__name__)
 
@@ -41,6 +46,22 @@ def api_accept_connection():
     response = server.accept_connection(public_key)
     return jsonify(response), response["code"]
 
+def run_server(host):
+    thread = threading.Thread(target=lambda: app.run(host=host,port=8069,debug=False))
+    thread.daemon = True
+    thread.start()
+
 if __name__ == "__main__":
-    # Host '0.0.0.0' allows access from any network interface
-    app.run(host="0.0.0.0", port=5001, debug=True)
+    print("[+] Starting handshake server")
+    # Plan: Start zeroconf, and whenever a service is discovered, start the handshake protocol,
+    # Once the access token is successfully retreived, close zeroconf.
+    # TLDR: Only start zeroconf when needed, otherwise keep it off.
+    # Now the question is how do we get the IP and the port from zeroconf once it starts?
+    node = ZeroconfNode("__master", 8069)
+    run_server(node.ip)
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        node.close()
+    

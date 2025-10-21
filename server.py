@@ -211,6 +211,8 @@ if __name__ == "__main__":
 
     run_server(lan_ip)
 
+    print(f"Server now running on {lan_ip}")
+
     try:
         while True:
             time.sleep(1)

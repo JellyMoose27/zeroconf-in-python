@@ -28,7 +28,11 @@ class ClientSide:
             pem_public_key = self.public_key.public_bytes(encoding=serialization.Encoding.PEM,
                                                           format=serialization.PublicFormat.SubjectPublicKeyInfo).decode('utf-8')
             
-            payload = {"public_key": pem_public_key}
+            payload = {
+                "device_host": host,
+                'device_port': port,
+                "public_key": pem_public_key
+                }
 
             print("Sending request...")
 

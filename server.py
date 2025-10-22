@@ -88,10 +88,6 @@ class ServerSide:
             print(str(e))
             return {"code": 500, "message": f"Error accepting connection: {str(e)}"}
 
-    def create_record_to_odoo(self, server_host, server_port, access_token):
-        """Call Odoo's API to create a record of a device"""
-
-        
 
 server = ServerSide()
 
@@ -142,7 +138,12 @@ def api_tag_entry_report(current_client_id):
 @app.route("/server/accept/", methods=["POST"])
 def api_accept_connection():
     """Accept the connection by
-    sending the client its access token"""
+    sending the client its access token
+    Needs 3 parameters for input:
+    public_key: the client's public key
+    device_host: the client's IP address
+    device_port: the client's port
+    """
     data = request.get_json()
     public_key = data.get("public_key")
     device_host = data.get("device_host")
@@ -161,7 +162,7 @@ def start_discovery():
     global node
     try:
         if node is not None:
-            return jsonify({"code": 200, "message": "Zeroconf already running"}), 200
+            return jsonify({"code": 400, "message": "Zeroconf already running"}), 400
         
         service_name = request.json.get("service_name", "__master")
         port = request.json.get("port", 8069)

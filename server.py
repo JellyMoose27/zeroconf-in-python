@@ -21,7 +21,7 @@ SERVER_PRIVATE_KEY = rsa.generate_private_key(public_exponent=65537, key_size=20
 ALGORITHM = "RS256"
 TOKEN_EXPIRATION_MINUTES = 30
 
-ODOO_BASE_URL = "http://localhost:8069"
+ODOO_BASE_URL = "http://192.168.1.150:8069"
 
 node = None
 

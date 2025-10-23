@@ -4,6 +4,7 @@ import time
 import requests
 import json
 import socket
+import random
 from advertiser import DeviceAdvertiser
 from browser import Listener, Zeroconf, ServiceBrowser
 from zeroconfMain import ZeroconfNode
@@ -153,7 +154,7 @@ def api_accept_connection():
 
 def run_server(host):
     """Start the server using the ip address taken from the zeroconf"""
-    thread = threading.Thread(target=lambda: app.run(host=host,port=8069,debug=False))
+    thread = threading.Thread(target=lambda: app.run(host=host,port=random.randint(1024, 65535),debug=False))
     thread.daemon = True
     thread.start()
 
@@ -165,7 +166,7 @@ def start_discovery():
             return jsonify({"code": 400, "message": "Zeroconf already running"}), 400
         
         service_name = request.json.get("service_name", "__master")
-        port = request.json.get("port", 8069)
+        port = request.json.get("port", random.randint(1024, 65535))
 
         node = ZeroconfNode(service_name, port)
         print(f"[+] Zeroconf discovery started on {service_name}:{port}")

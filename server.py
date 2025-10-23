@@ -26,6 +26,8 @@ ODOO_BASE_URL = "http://192.168.1.150:8069"
 
 node = None
 
+SERVER_PORT = random.randint(1024, 65535)
+
 app = Flask(__name__)
 
 class ServerSide:
@@ -154,7 +156,7 @@ def api_accept_connection():
 
 def run_server(host):
     """Start the server using the ip address taken from the zeroconf"""
-    thread = threading.Thread(target=lambda: app.run(host=host,port=random.randint(1024, 65535),debug=False))
+    thread = threading.Thread(target=lambda: app.run(host=host,port=SERVER_PORT,debug=False))
     thread.daemon = True
     thread.start()
 
@@ -166,7 +168,7 @@ def start_discovery():
             return jsonify({"code": 400, "message": "Zeroconf already running"}), 400
         
         service_name = request.json.get("service_name", "__master")
-        port = request.json.get("port", random.randint(1024, 65535))
+        port = request.json.get("port", SERVER_PORT)
 
         node = ZeroconfNode(service_name, port)
         print(f"[+] Zeroconf discovery started on {service_name}:{port}")
@@ -201,6 +203,7 @@ def _get_lan_ip():
             return ip
         except Exception:
             return "127.0.0.1"
+
 
 if __name__ == "__main__":
     print("[+] Starting handshake server")
